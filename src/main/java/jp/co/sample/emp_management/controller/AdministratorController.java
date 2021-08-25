@@ -77,11 +77,9 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
 
-		if (result.hasErrors()) {
-			return toInsert();
-		}
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
+
 		
 		if(administratorRepository.findByMailAddress(form.getMailAddress()) == null) {
 			
