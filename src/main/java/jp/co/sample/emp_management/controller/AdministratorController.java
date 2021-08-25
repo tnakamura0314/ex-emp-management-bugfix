@@ -73,7 +73,7 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
 		
 		if(result.hasErrors()) {
 			return toInsert();
