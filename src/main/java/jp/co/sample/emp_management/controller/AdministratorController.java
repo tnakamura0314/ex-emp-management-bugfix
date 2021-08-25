@@ -30,7 +30,7 @@ public class AdministratorController {
 
 	@Autowired
 	private AdministratorService administratorService;
-	
+
 	@Autowired
 	private AdministratorRepository administratorRepository;
 
@@ -78,25 +78,31 @@ public class AdministratorController {
 	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
-
-		if (result.hasErrors()) {
+		
+		if ((form.getPassword() != form.getConfirmation_password())) {
+			FieldError passwordFieldError = new FieldError(result.getObjectName(), "confirmation_password", "パスワードと確認用パスワードが一致しません");
+			result.addError(passwordFieldError);
 			return toInsert();
 		}
 		
-		if(administratorRepository.findByMailAddress(form.getMailAddress()) == null) {
-			
+		if (result.hasErrors()) {
+			return toInsert();
+		}
+
+		if (administratorRepository.findByMailAddress(form.getMailAddress()) == null) {
+
 			Administrator administrator = new Administrator();
 			// フォームからドメインにプロパティ値をコピー
 			BeanUtils.copyProperties(form, administrator);
 			administratorService.insert(administrator);
 			return "redirect:/";
-			
-		}else {
+
+		} else {
 			FieldError fieldError = new FieldError(result.getObjectName(), "mailAddress", "既に登録されているメールアドレスです");
 			result.addError(fieldError);
 			return toInsert();
 		}
-		
+
 	}
 
 	/////////////////////////////////////////////////////
