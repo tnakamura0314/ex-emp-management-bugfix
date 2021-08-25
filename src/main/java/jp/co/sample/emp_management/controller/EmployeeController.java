@@ -92,4 +92,32 @@ public class EmployeeController {
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
 	}
+	
+	/**
+	 * 従業員名で曖昧検索した従業員情報を取得する.
+	 * 
+	 * @param name 従業員名
+	 * @return　該当の従業員情報
+	 */
+	@RequestMapping("/showNameList")
+	public String showNameList(String name, Model model){
+		
+		if(name == null) {
+			return "/employee/List";
+		}
+		
+		List<Employee> employeeList = employeeService.showNameList(name);
+		
+		if (employeeList == null) {
+			model.addAttribute("errorMessage", "検索結果が1件もありませんでした");
+			showList(model);
+			return "/employee/List";
+		}
+		model.addAttribute("employeeList", employeeList);
+		
+		
+		
+		return "/employee/List";
+		
+	}
 }

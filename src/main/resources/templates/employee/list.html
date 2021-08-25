@@ -56,6 +56,19 @@
 		</ol>
 
 		<!-- table -->
+		
+		<hr>
+		<div>
+		  <strong>従業員を検索する(名前で検索してください)</strong>
+		  <form th:action="@{/employee/showNameList}" method="post">
+		  　<div th:text="${errorMessage}" style="color : red;"></div>
+		    <input type="text" id="name" name="name">
+		    <button>検索</button>
+		  </form>
+		</div>
+		<hr>
+		
+		
 		<div class="row">
 			<div
 				class="table-responsive col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
