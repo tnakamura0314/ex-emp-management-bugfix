@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.sample.emp_management.domain.Employee;
+import jp.co.sample.emp_management.form.FindByNameForm;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
 import jp.co.sample.emp_management.service.EmployeeService;
 
@@ -35,6 +36,16 @@ public class EmployeeController {
 	@ModelAttribute
 	public UpdateEmployeeForm setUpForm() {
 		return new UpdateEmployeeForm();
+	}
+	
+	/**
+	 * 曖昧検索で使用するフォームオブジェクトをリクエストスコープに格納する.
+	 * 
+	 * @return フォーム
+	 */
+	@ModelAttribute
+	public FindByNameForm setUpFindByNameForm() {
+		return new FindByNameForm();
 	}
 
 	/////////////////////////////////////////////////////
@@ -100,13 +111,13 @@ public class EmployeeController {
 	 * @return　該当の従業員情報
 	 */
 	@RequestMapping("/showNameList")
-	public String showNameList(String name, Model model){
+	public String showNameList(FindByNameForm form, Model model){
 		
-		if(name == null) {
+		if(form.getName() == null) {
 			return "/employee/List";
 		}
 		
-		List<Employee> employeeList = employeeService.showNameList(name);
+		List<Employee> employeeList = employeeService.showNameList(form.getName());
 		
 		if (employeeList == null) {
 			model.addAttribute("errorMessage", "検索結果が1件もありませんでした");
