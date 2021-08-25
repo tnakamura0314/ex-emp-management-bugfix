@@ -77,7 +77,7 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
 		
 		if ((form.getPassword() != form.getConfirmation_password())) {
 			FieldError passwordFieldError = new FieldError(result.getObjectName(), "confirmation_password", "パスワードと確認用パスワードが一致しません");
