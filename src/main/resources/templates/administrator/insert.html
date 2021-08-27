@@ -79,6 +79,21 @@
 									</div>
 								</div>
 							</div>
+							<!-- 確認パスワード -->
+							<div class="form-group">
+								<div class="row">
+									<div class="col-sm-12">
+										<label for="confirmation_password">
+											確認用パスワード:
+										</label>
+										<label th:if="${#fields.hasErrors('confirmation_password')}" th:errors="*{confirmation_password}" class="error-messages">
+											確認用パスワードを入力してください
+										</label>
+										<input type="password" name="confirmation_password" id="confirmation_password" class="form-control" placeholder="confirmation_password"
+											 th:field="*{confirmation_password}" th:errorclass="error-input" value="xxxxxxxx">
+									</div>
+								</div>
+							</div>
 							<!-- 登録ボタン -->
 							<div class="form-group">
 								<div class="row">
