@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jp.co.sample.emp_management.domain.Employee;
+import jp.co.sample.emp_management.form.FindByNameForm;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
 import jp.co.sample.emp_management.service.EmployeeService;
 
@@ -35,6 +36,16 @@ public class EmployeeController {
 	@ModelAttribute
 	public UpdateEmployeeForm setUpForm() {
 		return new UpdateEmployeeForm();
+	}
+	
+	/**
+	 * 曖昧検索で使用するフォームオブジェクトをリクエストスコープに格納する.
+	 * 
+	 * @return フォーム
+	 */
+	@ModelAttribute
+	public FindByNameForm setUpFindByNameForm() {
+		return new FindByNameForm();
 	}
 
 	/////////////////////////////////////////////////////
@@ -91,5 +102,33 @@ public class EmployeeController {
 		employee.setDependentsCount(form.getIntDependentsCount());
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
+	}
+	
+	/**
+	 * 従業員名で曖昧検索した従業員情報を取得する.
+	 * 
+	 * @param name 従業員名
+	 * @return　該当の従業員情報
+	 */
+	@RequestMapping("/showNameList")
+	public String showNameList(FindByNameForm form, Model model){
+		
+		if(form.getName() == null) {
+			return "/employee/List";
+		}
+		
+		List<Employee> employeeList = employeeService.showNameList(form.getName());
+		
+		if (employeeList == null) {
+			model.addAttribute("errorMessage", "検索結果が1件もありませんでした");
+			showList(model);
+			return "/employee/List";
+		}
+		model.addAttribute("employeeList", employeeList);
+		
+		
+		
+		return "/employee/List";
+		
 	}
 }

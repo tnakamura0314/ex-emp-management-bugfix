@@ -40,7 +40,7 @@
 						<li class="active"><a href="list.html" th:href="@{/employee/showList}">従業員管理</a></li>
 					</ul>
 					<p class="navbar-text navbar-right">
-						<span th:text="${administratorName}">山田太郎</span>さんこんにちは！
+						<span th:text="${session.administratorName}">山田太郎</span>さんこんにちは！
 						&nbsp;&nbsp;&nbsp;
 						<a href="../administrator/login.html" class="navbar-link" th:href="@{/logout}">ログアウト</a>
 					</p>
@@ -56,6 +56,19 @@
 		</ol>
 
 		<!-- table -->
+		
+		<hr>
+		<div>
+		  <strong>従業員を検索する(名前で検索してください)</strong>
+		  <form th:action="@{/employee/showNameList}" method="post" th:object="${findByNameForm}">
+		  　<div th:text="${errorMessage}" style="color : red;"></div>
+		    <input type="text" id="name" name="name" th:field="*{name}">
+		    <button>検索</button>
+		  </form>
+		</div>
+		<hr>
+		
+		
 		<div class="row">
 			<div
 				class="table-responsive col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8 col-sm-12 col-xs-12">
