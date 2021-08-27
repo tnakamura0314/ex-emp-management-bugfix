@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jp.co.sample.emp_management.domain.Administrator;
 import jp.co.sample.emp_management.form.InsertAdministratorForm;
 import jp.co.sample.emp_management.form.LoginForm;
-import jp.co.sample.emp_management.repository.AdministratorRepository;
 import jp.co.sample.emp_management.service.AdministratorService;
 
 /**
@@ -30,9 +29,6 @@ public class AdministratorController {
 
 	@Autowired
 	private AdministratorService administratorService;
-	
-	@Autowired
-	private AdministratorRepository administratorRepository;
 
 	@Autowired
 	private HttpSession session;
@@ -77,30 +73,23 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-<<<<<<< HEAD
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
 
-		if (result.hasErrors()) {
-			return toInsert();
-		}
-=======
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
->>>>>>> develop
 		
-		if(administratorRepository.findByMailAddress(form.getMailAddress()) == null) {
-			
+		if (administratorService.findByMailAddress(form.getMailAddress()) == null) {
+
 			Administrator administrator = new Administrator();
 			// フォームからドメインにプロパティ値をコピー
 			BeanUtils.copyProperties(form, administrator);
 			administratorService.insert(administrator);
 			return "redirect:/";
-			
-		}else {
+
+		} else {
 			FieldError fieldError = new FieldError(result.getObjectName(), "mailAddress", "既に登録されているメールアドレスです");
 			result.addError(fieldError);
 			return toInsert();
 		}
-		
+
 	}
 
 	/////////////////////////////////////////////////////
