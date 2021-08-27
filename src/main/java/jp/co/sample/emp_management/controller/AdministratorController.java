@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jp.co.sample.emp_management.domain.Administrator;
 import jp.co.sample.emp_management.form.InsertAdministratorForm;
 import jp.co.sample.emp_management.form.LoginForm;
-import jp.co.sample.emp_management.repository.AdministratorRepository;
 import jp.co.sample.emp_management.service.AdministratorService;
 
 /**
@@ -30,9 +29,6 @@ public class AdministratorController {
 
 	@Autowired
 	private AdministratorService administratorService;
-
-	@Autowired
-	private AdministratorRepository administratorRepository;
 
 	@Autowired
 	private HttpSession session;
@@ -77,31 +73,24 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
+
 	public String insert(@Validated InsertAdministratorForm form, BindingResult result) {
-		
-		if ((form.getPassword() != form.getConfirmation_password())) {
-			FieldError passwordFieldError = new FieldError(result.getObjectName(), "confirmation_password", "パスワードと確認用パスワードが一致しません");
-			result.addError(passwordFieldError);
-			return toInsert();
+
+		if (administratorService.findByMailAddress(form.getMailAddress()) != null) {
+
+			FieldError fieldError = new FieldError(result.getObjectName(), "mailAddress", "既に登録されているメールアドレスです");
+			result.addError(fieldError);
 		}
-		
+
 		if (result.hasErrors()) {
 			return toInsert();
 		}
 
-		if (administratorRepository.findByMailAddress(form.getMailAddress()) == null) {
-
-			Administrator administrator = new Administrator();
-			// フォームからドメインにプロパティ値をコピー
-			BeanUtils.copyProperties(form, administrator);
-			administratorService.insert(administrator);
-			return "redirect:/";
-
-		} else {
-			FieldError fieldError = new FieldError(result.getObjectName(), "mailAddress", "既に登録されているメールアドレスです");
-			result.addError(fieldError);
-			return toInsert();
-		}
+		Administrator administrator = new Administrator();
+		// フォームからドメインにプロパティ値をコピー
+		BeanUtils.copyProperties(form, administrator);
+		administratorService.insert(administrator);
+		return "redirect:/";
 
 	}
 
@@ -132,9 +121,9 @@ public class AdministratorController {
 			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return toLogin();
 		}
-		
+
 		session.setAttribute("administratorName", administrator.getName());
-		
+
 		return "forward:/employee/showList";
 	}
 
